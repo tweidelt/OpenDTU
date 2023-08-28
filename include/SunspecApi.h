@@ -29,7 +29,7 @@ private:
     const uint16_t _value;
 
 public:
-    UInt16Value(uint16_t value): _value(value) {}
+    explicit UInt16Value(uint16_t value): _value(value) {}
     uint16_t getValue(uint16_t offset) const override {
         return _value;
     }
@@ -43,7 +43,7 @@ private:
     const int16_t _value;
 
 public:
-    Int16Value(int16_t value): _value(value) {}
+    explicit Int16Value(int16_t value): _value(value) {}
     uint16_t getValue(uint16_t offset) const override {
         return (uint16_t)_value;
     }
@@ -57,7 +57,7 @@ private:
     const uint32_t _value;
 
 public:
-    UInt32Value(uint32_t value): _value(value) {}
+    explicit UInt32Value(uint32_t value): _value(value) {}
 
     uint16_t getValue(uint16_t offset) const override;
 
@@ -71,7 +71,7 @@ private:
     const float _value;
 
 public:
-    Float32Value(float value): _value(value) {}
+    explicit Float32Value(float value): _value(value) {}
 
     uint16_t getValue(uint16_t offset) const override;
     
@@ -100,7 +100,7 @@ private:
     std::function<uint16_t()> _callback;
 
 public:
-    UInt16Callback(std::function<uint16_t()> callback) : _callback(callback) {}
+    explicit UInt16Callback(std::function<uint16_t()> callback) : _callback(callback) {}
 
     uint16_t getValue(uint16_t offset) const override {
         return _callback();
@@ -117,7 +117,7 @@ private:
     float _currentValue = NAN;
 
 public:
-    FloatCallback(std::function<float()> callback) : _callback(callback) {}
+    explicit FloatCallback(std::function<float()> callback) : _callback(callback) {}
 
     void update() {
         _currentValue = _callback();
@@ -135,7 +135,7 @@ private:
     std::vector<std::shared_ptr<Value>> _values;
 
 public:
-    CompositeValue& addValue(std::shared_ptr<Value> value) {
+    explicit CompositeValue& addValue(std::shared_ptr<Value> value) {
         _values.push_back(std::move(value));
         return *this;
     }
