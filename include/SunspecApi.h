@@ -135,7 +135,7 @@ private:
     std::vector<std::shared_ptr<Value>> _values;
 
 public:
-    explicit CompositeValue& addValue(std::shared_ptr<Value> value) {
+    CompositeValue& addValue(std::shared_ptr<Value> value) {
         _values.push_back(std::move(value));
         return *this;
     }
