@@ -62,14 +62,16 @@ void WebApiWsLiveClass::loop()
     if (millis() - _lastWsPublish > (10 * 1000) || (maxTimeStamp != _newestInverterTimestamp)) {
 
         try {
-            DynamicJsonDocument root(40960);
-            JsonVariant var = root;
-            generateJsonResponse(var);
-
             String buffer;
-            if (buffer) {
+            // free JsonDocument as soon as possible
+            {
+                DynamicJsonDocument root(4096 * INV_MAX_COUNT); // TODO(helge) check if this calculation is correct
+                JsonVariant var = root;
+                generateJsonResponse(var);
                 serializeJson(root, buffer);
+            }
 
+            if (buffer) {
                 if (Configuration.get().Security_AllowReadonly) {
                     _ws.setAuthentication("", "");
                 } else {
@@ -80,7 +82,7 @@ void WebApiWsLiveClass::loop()
             }
 
         } catch (const std::bad_alloc& bad_alloc) {
-            MessageOutput.printf("Call to /api/livedata/status temporarely out of resources. Reason: \"%s\".\r\n", bad_alloc.what());
+            MessageOutput.printf("Calling /api/livedata/status has temporarily run out of resources. Reason: \"%s\".\r\n", bad_alloc.what());
         } catch (const std::exception& exc) {
             MessageOutput.printf("Unknown exception in /api/livedata/status. Reason: \"%s\".\r\n", exc.what());
         }
@@ -230,7 +232,7 @@ void WebApiWsLiveClass::onLivedataStatus(AsyncWebServerRequest* request)
         request->send(response);
 
     } catch (const std::bad_alloc& bad_alloc) {
-        MessageOutput.printf("Call to /api/livedata/status temporarely out of resources. Reason: \"%s\".\r\n", bad_alloc.what());
+        MessageOutput.printf("Calling /api/livedata/status has temporarily run out of resources. Reason: \"%s\".\r\n", bad_alloc.what());
         WebApi.sendTooManyRequests(request);
     } catch (const std::exception& exc) {
         MessageOutput.printf("Unknown exception in /api/livedata/status. Reason: \"%s\".\r\n", exc.what());

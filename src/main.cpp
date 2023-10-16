@@ -17,9 +17,9 @@
 #include "NtpSettings.h"
 #include "PinMapping.h"
 #include "SunPosition.h"
-#include "SunspecApi.h"
 #include "Utils.h"
 #include "WebApi.h"
+#include "SunspecApi.h"
 #include "defaults.h"
 #include <Arduino.h>
 #include <LittleFS.h>
@@ -161,6 +161,8 @@ void loop()
     InverterSettings.loop();
     yield();
     Datastore.loop();
+    yield();
+    MqttSettings.loop();
     yield();
     MqttHandleDtu.loop();
     yield();

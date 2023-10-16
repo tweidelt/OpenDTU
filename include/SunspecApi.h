@@ -10,7 +10,6 @@
 struct SunspecConstants {
     static const uint8_t BASE_UNIT_ID = 126; // default: 126
     static const uint16_t COMMON_BASE_ADDRESS = 40000;
-    static const uint16_t INVERTER_MODEL_IMMEDIATE_CONTROLS_BASE_ADDRESS = COMMON_BASE_ADDRESS + 184;
 };
 
 namespace Modbus
@@ -181,11 +180,12 @@ public:
         _delegate->addString("SunS", 2);
     }
 
-    DeviceModel& addSunspecModel(uint16_t modelId, std::shared_ptr<CompositeValue> model) {
+   uint16_t addSunspecModel(uint16_t modelId, std::shared_ptr<CompositeValue> model) {
+        auto modelOffset = _delegate->regCount();
         _delegate->addUInt16(modelId);
         _delegate->addUInt16(model->regCount());
         _delegate->addValue(model);
-        return *this;
+        return modelOffset;
     }
 
     std::shared_ptr<CompositeValue> build() {
@@ -211,9 +211,11 @@ private:
     const int16_t acPowerLimitScaleFactor = -2;
     const int16_t acPowerFactorScaleFactor = -2;
 
+    uint16_t _immediate_controls_base_address = 0;
+    
     uint32_t _lastPublish = 0;
     uint32_t _lastLoopMillis = 0;
-    uint32_t _reg = 0;
+    //uint32_t _reg = 0;
 
     uint16_t _powerLimitPct = 100;
     std::map<uint8_t, std::shared_ptr<Modbus::CompositeValue>> _memory;

@@ -16,7 +16,6 @@ public:
 private:
     void onGetActiveDeviceInfo(AsyncWebServerRequest* request);
     void onGetInverterInfo(AsyncWebServerRequest* request);
-    void NotFound(AsyncWebServerRequest* request);
 
     AsyncWebServer* _server;
 };

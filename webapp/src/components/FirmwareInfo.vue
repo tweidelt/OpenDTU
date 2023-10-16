@@ -23,6 +23,10 @@
                             </a></td>
                     </tr>
                     <tr>
+                        <th>{{ $t('firmwareinfo.FirmwareBranch') }}</th>
+                        <td>{{ systemStatus.git_branch }}</td>
+                    </tr>
+                    <tr>
                         <th>{{ $t('firmwareinfo.PioEnv') }}</th>
                         <td>{{ systemStatus.pioenv }}</td>
                     </tr>
@@ -78,9 +82,9 @@ export default defineComponent({
         },
         versionInfoUrl(): string {
             if (this.systemStatus.git_is_hash) {
-                return 'https://github.com/tbnobody/OpenDTU/commits/' + this.systemStatus.git_hash;
+                return 'https://github.com/tweidelt/OpenDTU-SunSpec/commits/' + this.systemStatus.git_hash;
             }
-            return 'https://github.com/tbnobody/OpenDTU/releases/tag/' + this.systemStatus.git_hash;
+            return 'https://github.com/tweidelt/OpenDTU-SunSpec/releases/tag/' + this.systemStatus.git_hash;
         }
     },
 });

@@ -11,7 +11,7 @@
                 <span v-else class="text-warning">
                     <BIconSun width="30" height="30" class="d-inline-block align-text-top" />
                 </span>
-                 OpenDTU
+                 OpenDTU SunSpec
             </router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">

@@ -91,8 +91,10 @@ void MqttSettingsClass::onMqttDisconnect(espMqttClientTypes::DisconnectReason re
 
 void MqttSettingsClass::onMqttMessage(const espMqttClientTypes::MessageProperties& properties, const char* topic, const uint8_t* payload, size_t len, size_t index, size_t total)
 {
-    MessageOutput.print("Received MQTT message on topic: ");
-    MessageOutput.println(topic);
+    if (_verboseLogging) {
+        MessageOutput.print("Received MQTT message on topic: ");
+        MessageOutput.println(topic);
+    }
 
     _mqttSubscribeParser.handle_message(properties, topic, payload, len, index, total);
 }
@@ -114,6 +116,7 @@ void MqttSettingsClass::performConnect()
 
         MessageOutput.println("Connecting to MQTT...");
         const CONFIG_T& config = Configuration.get();
+        _verboseLogging = config.Mqtt_VerboseLogging;
         willTopic = getPrefix() + config.Mqtt_LwtTopic;
         clientId = NetworkSettings.getApName();
         if (config.Mqtt_Tls) {
@@ -211,6 +214,12 @@ void MqttSettingsClass::init()
     createMqttClientObject();
 }
 
+void MqttSettingsClass::loop()
+{
+    if (nullptr == mqttClient) { return; }
+    mqttClient->loop();
+}
+
 void MqttSettingsClass::createMqttClientObject()
 {
     std::lock_guard<std::mutex> lock(_clientLock);
@@ -220,9 +229,9 @@ void MqttSettingsClass::createMqttClientObject()
     }
     const CONFIG_T& config = Configuration.get();
     if (config.Mqtt_Tls) {
-        mqttClient = static_cast<MqttClient*>(new espMqttClientSecure);
+        mqttClient = new espMqttClientSecure(espMqttClientTypes::UseInternalTask::NO);
     } else {
-        mqttClient = static_cast<MqttClient*>(new espMqttClient);
+        mqttClient = new espMqttClient(espMqttClientTypes::UseInternalTask::NO);
     }
 }
 

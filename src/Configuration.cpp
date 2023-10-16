@@ -51,6 +51,7 @@ bool ConfigurationClass::write()
 
     JsonObject mqtt = doc.createNestedObject("mqtt");
     mqtt["enabled"] = config.Mqtt_Enabled;
+    mqtt["verbose_logging"] = config.Mqtt_VerboseLogging;
     mqtt["hostname"] = config.Mqtt_Hostname;
     mqtt["port"] = config.Mqtt_Port;
     mqtt["username"] = config.Mqtt_Username;
@@ -81,6 +82,7 @@ bool ConfigurationClass::write()
     JsonObject dtu = doc.createNestedObject("dtu");
     dtu["serial"] = config.Dtu_Serial;
     dtu["poll_interval"] = config.Dtu_PollInterval;
+    dtu["verbose_logging"] = config.Dtu_VerboseLogging;
     dtu["nrf_pa_level"] = config.Dtu_NrfPaLevel;
     dtu["cmt_pa_level"] = config.Dtu_CmtPaLevel;
     dtu["cmt_frequency"] = config.Dtu_CmtFrequency;
@@ -197,6 +199,7 @@ bool ConfigurationClass::read()
 
     JsonObject mqtt = doc["mqtt"];
     config.Mqtt_Enabled = mqtt["enabled"] | MQTT_ENABLED;
+    config.Mqtt_VerboseLogging = mqtt["verbose_logging"] | VERBOSE_LOGGING;
     strlcpy(config.Mqtt_Hostname, mqtt["hostname"] | MQTT_HOST, sizeof(config.Mqtt_Hostname));
     config.Mqtt_Port = mqtt["port"] | MQTT_PORT;
     strlcpy(config.Mqtt_Username, mqtt["username"] | MQTT_USER, sizeof(config.Mqtt_Username));
@@ -227,6 +230,7 @@ bool ConfigurationClass::read()
     JsonObject dtu = doc["dtu"];
     config.Dtu_Serial = dtu["serial"] | DTU_SERIAL;
     config.Dtu_PollInterval = dtu["poll_interval"] | DTU_POLL_INTERVAL;
+    config.Dtu_VerboseLogging = dtu["verbose_logging"] | VERBOSE_LOGGING;
     config.Dtu_NrfPaLevel = dtu["nrf_pa_level"] | DTU_NRF_PA_LEVEL;
     config.Dtu_CmtPaLevel = dtu["cmt_pa_level"] | DTU_CMT_PA_LEVEL;
     config.Dtu_CmtFrequency = dtu["cmt_frequency"] | DTU_CMT_FREQUENCY;

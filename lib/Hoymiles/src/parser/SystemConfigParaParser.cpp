@@ -57,7 +57,7 @@ void SystemConfigParaParser::setLimitPercent(float value)
 {
     HOY_SEMAPHORE_TAKE();
     _payload[2] = ((uint16_t)(value * 10)) >> 8;
-    _payload[3] = ((uint16_t)(value * 10)) | 0xFF;
+    _payload[3] = ((uint16_t)(value * 10));
     HOY_SEMAPHORE_GIVE();
 }
 

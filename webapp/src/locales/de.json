@@ -23,6 +23,9 @@
         "Login": "Anmelden"
     },
     "base": {
+        "Yes": "Ja",
+        "No": "Nein",
+        "VerboseLogging": "Ausführliche Protokollierung",
         "Loading": "Lade...",
         "Reload": "Aktualisieren"
     },
@@ -327,6 +330,7 @@
         "Serial": "Seriennummer:",
         "SerialHint": "Sowohl der Wechselrichter als auch die DTU haben eine Seriennummer. Die DTU-Seriennummer wird beim ersten Start zufällig generiert und muss normalerweise nicht geändert werden.",
         "PollInterval": "Abfrageintervall:",
+        "VerboseLogging": "@:base.VerboseLogging",
         "Seconds": "Sekunden",
         "NrfPaLevel": "NRF24 Sendeleistung:",
         "CmtPaLevel": "CMT2300A Sendeleistung:",
@@ -399,6 +403,7 @@
         "MqttSettings": "MQTT-Einstellungen",
         "MqttConfiguration": "MQTT-Konfiguration",
         "EnableMqtt": "MQTT aktivieren",
+        "VerboseLogging": "@:base.VerboseLogging",
         "EnableHass": "Home Assistant MQTT-Auto-Discovery aktivieren",
         "MqttBrokerParameter": "MQTT-Broker-Parameter",
         "Hostname": "Hostname:",

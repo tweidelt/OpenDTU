@@ -9,6 +9,7 @@
 #include "NetworkSettings.h"
 #include "WebApi.h"
 #include <Hoymiles.h>
+#include "MessageOutput.h"
 
 void WebApiPrometheusClass::init(AsyncWebServer* server)
 {
@@ -26,7 +27,7 @@ void WebApiPrometheusClass::loop()
 void WebApiPrometheusClass::onPrometheusMetricsGet(AsyncWebServerRequest* request)
 {
     try {
-        auto stream = request->beginResponseStream("text/plain; charset=utf-8", 40960);
+        auto stream = request->beginResponseStream("text/plain; charset=utf-8", 4096 * INV_MAX_COUNT); // TODO(helge) check if this calculation is correct
 
         stream->print("# HELP opendtu_build Build info\n");
         stream->print("# TYPE opendtu_build gauge\n");
@@ -89,7 +90,7 @@ void WebApiPrometheusClass::onPrometheusMetricsGet(AsyncWebServerRequest* reques
         request->send(stream);
 
     } catch (std::bad_alloc& bad_alloc) {
-        MessageOutput.printf("Call to /api/prometheus/metrics temporarely out of resources. Reason: \"%s\".\r\n", bad_alloc.what());
+        MessageOutput.printf("Calling /api/prometheus/metrics has temporarily run out of resources. Reason: \"%s\".\r\n", bad_alloc.what());
 
         WebApi.sendTooManyRequests(request);
     }

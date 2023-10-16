@@ -23,6 +23,9 @@
         "Login": "Login"
     },
     "base": {
+        "Yes": "Yes",
+        "No": "No",
+        "VerboseLogging": "Verbose Logging",
         "Loading": "Loading...",
         "Reload": "Reload"
     },
@@ -161,6 +164,7 @@
         "SdkVersion": "SDK Version",
         "ConfigVersion": "Config Version",
         "FirmwareVersion": "Firmware Version / Git Hash",
+        "FirmwareBranch": "Firmware Branch",
         "PioEnv": "PIO Environment",
         "FirmwareVersionHint": "Click here to show information about your current version",
         "FirmwareUpdate": "Firmware Update",
@@ -257,6 +261,7 @@
         "MqttInformation": "MQTT Information",
         "ConfigurationSummary": "@:ntpinfo.ConfigurationSummary",
         "Status": "@:ntpinfo.Status",
+        "VerboseLogging": "@:base.VerboseLogging",
         "Enabled": "Enabled",
         "Disabled": "Disabled",
         "Server": "@:ntpinfo.Server",
@@ -327,6 +332,7 @@
         "Serial": "Serial:",
         "SerialHint": "Both the inverter and the DTU have a serial number. The DTU serial number is randomly generated at the first start and does not normally need to be changed.",
         "PollInterval": "Poll Interval:",
+        "VerboseLogging": "@:base.VerboseLogging",
         "Seconds": "Seconds",
         "NrfPaLevel": "NRF24 Transmitting power:",
         "CmtPaLevel": "CMT2300A Transmitting power:",
@@ -399,6 +405,7 @@
         "MqttSettings": "MQTT Settings",
         "MqttConfiguration": "MQTT Configuration",
         "EnableMqtt": "Enable MQTT",
+        "VerboseLogging": "@:base.VerboseLogging",
         "EnableHass": "Enable Home Assistant MQTT Auto Discovery",
         "MqttBrokerParameter": "MQTT Broker Parameter",
         "Hostname": "Hostname:",

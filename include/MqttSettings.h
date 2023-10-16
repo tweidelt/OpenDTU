@@ -11,6 +11,7 @@ class MqttSettingsClass {
 public:
     MqttSettingsClass();
     void init();
+    void loop();
     void performReconnect();
     bool getConnected();
     void publish(const String& subtopic, const String& payload);
@@ -39,6 +40,7 @@ private:
     Ticker mqttReconnectTimer;
     MqttSubscribeParser _mqttSubscribeParser;
     std::mutex _clientLock;
+    bool _verboseLogging = true;
 };
 
 extern MqttSettingsClass MqttSettings;

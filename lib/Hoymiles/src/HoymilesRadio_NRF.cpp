@@ -48,7 +48,7 @@ void HoymilesRadio_NRF::loop()
     }
 
     if (_packetReceived) {
-        Hoymiles.getMessageOutput()->println("Interrupt received");
+        Hoymiles.getVerboseMessageOutput()->println("Interrupt received");
         while (_radio->available()) {
             if (!(_rxBuffer.size() > FRAGMENT_BUFFER_SIZE)) {
                 fragment_t f;
@@ -76,17 +76,17 @@ void HoymilesRadio_NRF::loop()
 
                 if (nullptr != inv) {
                     // Save packet in inverter rx buffer
-                    Hoymiles.getMessageOutput()->printf("RX Channel: %d --> ", f.channel);
+                    Hoymiles.getVerboseMessageOutput()->printf("RX Channel: %d --> ", f.channel);
                     dumpBuf(f.fragment, f.len, false);
-                    Hoymiles.getMessageOutput()->printf("| %d dBm\r\n", f.rssi);
+                    Hoymiles.getVerboseMessageOutput()->printf("| %d dBm\r\n", f.rssi);
 
                     inv->addRxFragment(f.fragment, f.len);
                 } else {
-                    Hoymiles.getMessageOutput()->println("Inverter Not found!");
+                    Hoymiles.getMessageOutput()->println("Inverter not found!");
                 }
 
             } else {
-                Hoymiles.getMessageOutput()->println("Frame kaputt");
+                Hoymiles.getMessageOutput()->println("Corrupted frame detected");
             }
 
             // Remove paket from buffer even it was corrupted

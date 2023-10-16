@@ -366,7 +366,7 @@ void SunspecApiClass::initDeviceModel(uint8_t unitId) {
             .addUInt16(0xFFFF)));
 
     // SunSpec Immediate Controls (Model 123)
-    deviceModel.addSunspecModel(123, std::make_shared<Modbus::CompositeValue>(
+    _immediate_controls_base_address = SunspecConstants::COMMON_BASE_ADDRESS + deviceModel.addSunspecModel(123, std::make_shared<Modbus::CompositeValue>(
         Modbus::CompositeValue()
             .addUInt16(0xFFFF) // Conn_WinTms
             .addUInt16(0xFFFF) // Conn_RvrtTms
@@ -442,28 +442,25 @@ void SunspecApiClass::writeRegister(uint8_t unitId, uint16_t addr, uint16_t valu
 
     auto inv = Hoymiles.getInverterByPos(unitId - SunspecConstants::BASE_UNIT_ID);
 
-    switch (addr) {
-    {
-        case SunspecConstants::INVERTER_MODEL_IMMEDIATE_CONTROLS_BASE_ADDRESS + 5: {
-            MessageOutput.print(": set power-limit");
-            float acPowerLimitPct = bound(2, value / pow(10, -acPowerLimitScaleFactor), 100); // 2 to 100 (Inverter does not support values < 2%)
-            _powerLimitPct = acPowerLimitPct;
-            if (inv->SystemConfigPara()->getLimitPercent() < 100) {
-                // If power-limit is already enabled, update the limit
-                inv->SystemConfigPara()->setLimitPercent(acPowerLimitPct);
-            }
-            break;
+    if (addr == _immediate_controls_base_address + 5) {
+        MessageOutput.print(": set power-limit");
+        float acPowerLimitPct = bound(1, value / pow(10, -acPowerLimitScaleFactor), 100);
+        _powerLimitPct = acPowerLimitPct;
+        if (inv->SystemConfigPara()->getLimitPercent() < 100) {
+            // If power-limit is already enabled, update the limit
+            inv->sendActivePowerControlRequest(acPowerLimitPct, PowerLimitControlType::RelativNonPersistent);
         }
-
-        case SunspecConstants::INVERTER_MODEL_IMMEDIATE_CONTROLS_BASE_ADDRESS + 14: {
-            MessageOutput.print(": power-limit enable/disable");
-            inv->SystemConfigPara()->setLimitPercent(value ? _powerLimitPct : 100);
-            break;
-        }
-
-        default:
-            MessageOutput.print(": unsupported, skipped");
-        }
+    } else if (addr == _immediate_controls_base_address + 6) {
+        // ignore
+    } else if (addr == _immediate_controls_base_address + 7) {
+        // ignore
+    } else if (addr == _immediate_controls_base_address + 8) {
+        // ignore
+    } else if (addr == _immediate_controls_base_address + 9) {
+        MessageOutput.print(": power-limit enable/disable");
+        inv->sendActivePowerControlRequest(value ? _powerLimitPct : 100, PowerLimitControlType::RelativNonPersistent);
+    } else {
+        MessageOutput.print(": unsupported, skipped");
     }
     MessageOutput.println();
 }

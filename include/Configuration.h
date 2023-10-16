@@ -72,6 +72,7 @@ struct CONFIG_T {
 
     bool Mqtt_Enabled;
     char Mqtt_Hostname[MQTT_MAX_HOSTNAME_STRLEN + 1];
+    bool Mqtt_VerboseLogging;
     uint Mqtt_Port;
     char Mqtt_Username[MQTT_MAX_USERNAME_STRLEN + 1];
     char Mqtt_Password[MQTT_MAX_PASSWORD_STRLEN + 1];
@@ -81,6 +82,15 @@ struct CONFIG_T {
     char Mqtt_LwtValue_Online[MQTT_MAX_LWTVALUE_STRLEN + 1];
     char Mqtt_LwtValue_Offline[MQTT_MAX_LWTVALUE_STRLEN + 1];
     uint32_t Mqtt_PublishInterval;
+
+    INVERTER_CONFIG_T Inverter[INV_MAX_COUNT];
+
+    uint64_t Dtu_Serial;
+    uint32_t Dtu_PollInterval;
+    bool Dtu_VerboseLogging;
+    uint8_t Dtu_NrfPaLevel;
+    int8_t Dtu_CmtPaLevel;
+    uint32_t Dtu_CmtFrequency;
 
     bool Mqtt_Hass_Enabled;
     bool Mqtt_Hass_Retain;
@@ -94,15 +104,7 @@ struct CONFIG_T {
     char Mqtt_ClientCert[MQTT_MAX_CERT_STRLEN + 1];
     char Mqtt_ClientKey[MQTT_MAX_CERT_STRLEN + 1];
 
-    INVERTER_CONFIG_T Inverter[INV_MAX_COUNT];
-
-    uint64_t Dtu_Serial;
-    uint32_t Dtu_PollInterval;
-    uint8_t Dtu_NrfPaLevel;
-    int8_t Dtu_CmtPaLevel;
-    uint32_t Dtu_CmtFrequency;
-
-    char Security_Password[WIFI_MAX_PASSWORD_STRLEN + 1];
+     char Security_Password[WIFI_MAX_PASSWORD_STRLEN + 1];
     bool Security_AllowReadonly;
 
     char Dev_PinMapping[DEV_MAX_MAPPING_NAME_STRLEN + 1];

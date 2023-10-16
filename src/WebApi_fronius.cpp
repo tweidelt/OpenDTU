@@ -20,7 +20,6 @@ void WebApiFroniusClass::init(AsyncWebServer* server)
 
     _server->on("/solar_api/v1/GetActiveDeviceInfo.cgi", HTTP_GET, std::bind(&WebApiFroniusClass::onGetActiveDeviceInfo, this, _1));
     _server->on("/solar_api/v1/GetInverterInfo.cgi", HTTP_GET, std::bind(&WebApiFroniusClass::onGetInverterInfo, this, _1));
-    _server->onNotFound(std::bind(&WebApiFroniusClass::NotFound, this, _1));
 
     Udp.begin(50049); // local port to listen on
 }
@@ -165,12 +164,4 @@ void WebApiFroniusClass::onGetInverterInfo(AsyncWebServerRequest* request)
         MessageOutput.printf("Unknown exception in %s. Reason: \"%s\".\r\n", request->url().c_str(), exc.what());
         WebApi.sendTooManyRequests(request);
     }
-}
-
-void WebApiFroniusClass::NotFound(AsyncWebServerRequest* request)
-{
-    MessageOutput.println("WebApiFroniusClass::NotFound - " + request->url());
-
-    AsyncBasicResponse* response = new AsyncBasicResponse(404, "text/plain", "Not found: " + request->url());
-    request->send(response);
 }
