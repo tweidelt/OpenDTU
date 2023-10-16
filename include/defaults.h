@@ -74,6 +74,7 @@
 #define MQTT_LWT_ONLINE "online"
 #define MQTT_LWT_OFFLINE "offline"
 #define MQTT_PUBLISH_INTERVAL 5U
+#define MQTT_CLEAN_SESSION true
 
 #define DTU_SERIAL 0x99978563412U
 #define DTU_POLL_INTERVAL 5U
@@ -96,3 +97,5 @@
 #define DISPLAY_LANGUAGE 0U
 
 #define VERBOSE_LOGGING true
+
+#define REACHABLE_THRESHOLD 2U

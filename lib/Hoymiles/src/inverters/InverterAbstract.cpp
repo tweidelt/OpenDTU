@@ -20,6 +20,7 @@ InverterAbstract::InverterAbstract(HoymilesRadio* radio, uint64_t serial)
 
     _alarmLogParser.reset(new AlarmLogParser());
     _devInfoParser.reset(new DevInfoParser());
+    _gridProfileParser.reset(new GridProfileParser());
     _powerCommandParser.reset(new PowerCommandParser());
     _statisticsParser.reset(new StatisticsParser());
     _systemConfigParaParser.reset(new SystemConfigParaParser());
@@ -70,7 +71,7 @@ bool InverterAbstract::isProducing()
 
 bool InverterAbstract::isReachable()
 {
-    return _enablePolling && Statistics()->getRxFailureCount() <= MAX_ONLINE_FAILURE_COUNT;
+    return _enablePolling && Statistics()->getRxFailureCount() <= _reachableThreshold;
 }
 
 void InverterAbstract::setEnablePolling(bool enabled)
@@ -93,6 +94,36 @@ bool InverterAbstract::getEnableCommands()
     return _enableCommands;
 }
 
+void InverterAbstract::setReachableThreshold(uint8_t threshold)
+{
+    _reachableThreshold = threshold;
+}
+
+uint8_t InverterAbstract::getReachableThreshold()
+{
+    return _reachableThreshold;
+}
+
+void InverterAbstract::setZeroValuesIfUnreachable(bool enabled)
+{
+    _zeroValuesIfUnreachable = enabled;
+}
+
+bool InverterAbstract::getZeroValuesIfUnreachable()
+{
+    return _zeroValuesIfUnreachable;
+}
+
+void InverterAbstract::setZeroYieldDayOnMidnight(bool enabled)
+{
+    _zeroYieldDayOnMidnight = enabled;
+}
+
+bool InverterAbstract::getZeroYieldDayOnMidnight()
+{
+    return _zeroYieldDayOnMidnight;
+}
+
 bool InverterAbstract::sendChangeChannelRequest()
 {
     return false;
@@ -111,6 +142,11 @@ AlarmLogParser* InverterAbstract::EventLog()
 DevInfoParser* InverterAbstract::DevInfo()
 {
     return _devInfoParser.get();
+}
+
+GridProfileParser* InverterAbstract::GridProfile()
+{
+    return _gridProfileParser.get();
 }
 
 PowerCommandParser* InverterAbstract::PowerCommand()

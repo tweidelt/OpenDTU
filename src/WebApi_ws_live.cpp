@@ -62,16 +62,15 @@ void WebApiWsLiveClass::loop()
     if (millis() - _lastWsPublish > (10 * 1000) || (maxTimeStamp != _newestInverterTimestamp)) {
 
         try {
-            String buffer;
-            // free JsonDocument as soon as possible
-            {
-                DynamicJsonDocument root(4096 * INV_MAX_COUNT); // TODO(helge) check if this calculation is correct
-                JsonVariant var = root;
-                generateJsonResponse(var);
-                serializeJson(root, buffer);
-            }
+            std::lock_guard<std::mutex> lock(_mutex);
+            DynamicJsonDocument root(4096 * INV_MAX_COUNT);
+            JsonVariant var = root;
+            generateJsonResponse(var);
 
+            String buffer;
             if (buffer) {
+                serializeJson(root, buffer);
+
                 if (Configuration.get().Security_AllowReadonly) {
                     _ws.setAuthentication("", "");
                 } else {
@@ -148,6 +147,7 @@ void WebApiWsLiveClass::generateJsonResponse(JsonVariant& root)
                 addField(chanTypeObj, i, inv, t, c, FLD_EFF);
                 if (t == TYPE_DC && inv->Statistics()->getStringMaxPower(c) > 0) {
                     addField(chanTypeObj, i, inv, t, c, FLD_IRR);
+                    chanTypeObj[String(c)][inv->Statistics()->getChannelFieldName(t, c, FLD_IRR)]["max"] = inv->Statistics()->getStringMaxPower(c);
                 }
             }
         }
@@ -206,13 +206,9 @@ void WebApiWsLiveClass::addTotalField(JsonObject& root, String name, float value
 void WebApiWsLiveClass::onWebsocketEvent(AsyncWebSocket* server, AsyncWebSocketClient* client, AwsEventType type, void* arg, uint8_t* data, size_t len)
 {
     if (type == WS_EVT_CONNECT) {
-        char str[64];
-        snprintf(str, sizeof(str), "Websocket: [%s][%u] connect", server->url(), client->id());
-        MessageOutput.println(str);
+        MessageOutput.printf("Websocket: [%s][%u] connect\r\n", server->url(), client->id());
     } else if (type == WS_EVT_DISCONNECT) {
-        char str[64];
-        snprintf(str, sizeof(str), "Websocket: [%s][%u] disconnect", server->url(), client->id());
-        MessageOutput.println(str);
+        MessageOutput.printf("Websocket: [%s][%u] disconnect\r\n", server->url(), client->id());
     }
 }
 
@@ -223,7 +219,8 @@ void WebApiWsLiveClass::onLivedataStatus(AsyncWebServerRequest* request)
     }
 
     try {
-        AsyncJsonResponse* response = new AsyncJsonResponse(false, 40960U);
+        std::lock_guard<std::mutex> lock(_mutex);
+        AsyncJsonResponse* response = new AsyncJsonResponse(false, 4096 * INV_MAX_COUNT);
         JsonVariant root = response->getRoot();
 
         generateJsonResponse(root);
